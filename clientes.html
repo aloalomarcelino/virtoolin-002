@@ -471,7 +471,7 @@ input[type="file"] {
     </div>
 
     <div class="topo-direita">
-      <a href="painel.html" class="link-topo">painel</a>
+      <a href="index.html" class="link-topo">painel</a>
       <a href="clientes.html" class="link-topo" style="text-decoration: underline;">meus clientes</a>
       <a href="atos.html" class="link-topo">meus atos</a>
       <a href="jornal.html" class="link-topo">jornal</a>
@@ -839,13 +839,13 @@ function editarCliente(clienteId) {
   const cliente = clientesDB.find(c => c.id === clienteId);
   if (cliente) {
     localStorage.setItem('editarCliente', JSON.stringify(cliente));
-    window.location.href = 'painel.html';
+    window.location.href = 'index.html';
   }
 }
 
 // ======== NOVO CLIENTE ========
 document.getElementById('btnNovo').addEventListener('click', () => {
-  window.location.href = 'painel.html';
+  window.location.href = 'index.html';
 });
 
 // ======== IMPORTAR JSON ========
