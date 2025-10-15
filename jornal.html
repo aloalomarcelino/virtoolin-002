@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>virtoolin — Jornal</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+<style>
+.pagina-conteudo {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.titulo-pagina {
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.titulo-pagina h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 8px;
+}
+
+.titulo-pagina p {
+  font-size: 13px;
+  color: #666;
+}
+
+.filtros-jornal {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.filtros-jornal select {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 12px;
+  border: 1px solid #000;
+  border-radius: 6px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13px;
+  background: #fff;
+  font-weight: 600;
+}
+
+.timeline-jornal {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.jornal-item {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: all 0.25s ease;
+  position: relative;
+  padding-left: 25px;
+}
+
+.jornal-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 8px 0 0 8px;
+}
+
+.jornal-item.categoria-sistema::before {
+  background: #2196f3;
+}
+
+.jornal-item.categoria-cartorio::before {
+  background: #4caf50;
+}
+
+.jornal-item.categoria-importante::before {
+  background: #ff9800;
+}
+
+.jornal-item.categoria-aviso::before {
+  background: #f44336;
+}
+
+.jornal-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.jornal-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.badge-sistema {
+  background: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #64b5f6;
+}
+
+.badge-cartorio {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #81c784;
+}
+
+.badge-importante {
+  background: #fff3e0;
+  color: #e65100;
+  border: 1px solid #ffb74d;
+}
+
+.badge-aviso {
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #e57373;
+}
+
+.jornal-conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.jornal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 8px;
+}
+
+.jornal-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.jornal-data {
+  font-size: 11px;
+  color: #888;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.jornal-texto {
+  font-size: 13px;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.jornal-rodape {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px solid #e0e0e0;
+  margin-top: 8px;
+}
+
+.jornal-autor {
+  font-size: 11px;
+  color: #666;
+  font-weight: 600;
+}
+
+.jornal-vazio {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 14px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .filtros-jornal {
+    flex-direction: column;
+  }
+  
+  .filtros-jornal select {
+    min-width: 100%;
+  }
+  
+  .jornal-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .jornal-data {
+    align-self: flex-start;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-conteudo">
+    <div class="topo-esquerda">
+      <div class="linha-info"><strong><em>© virtoolin atende o:</em></strong></div>
+      <div class="titulo-cartorio">2º RCPN</div>
+      <div class="data-hora" id="dataHora"></div>
+    </div>
+
+    <div class="topo-direita">
+      <a href="painel.html" class="link-topo">painel</a>
+      <a href="clientes.html" class="link-topo">meus clientes</a>
+      <a href="atos.html" class="link-topo">meus atos</a>
+      <a href="jornal.html" class="link-topo" style="text-decoration: underline;">jornal</a>
+      <a href="#" class="sair">SAIR</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="pagina-conteudo">
+    <div class="titulo-pagina">
+      <h1>Jornal</h1>
+      <p>Atualizações e comunicados do sistema</p>
+    </div>
+
+    <div class="filtros-jornal">
+      <select id="filtroCategoria">
+        <option value="">Todas as categorias</option>
+        <option value="sistema">Sistema</option>
+        <option value="cartorio">Cartório</option>
+        <option value="importante">Importante</option>
+        <option value="aviso">Aviso</option>
+      </select>
+      <select id="filtroPeriodo">
+        <option value="hoje">Hoje</option>
+        <option value="semana">Esta semana</option>
+        <option value="mes">Este mês</option>
+        <option value="todos">Todos</option>
+      </select>
+    </div>
+
+    <div class="timeline-jornal" id="timelineJornal"></div>
+  </div>
+</main>
+
+<footer>
+  <span></span>
+  <span><span class="ovni">🛸</span> @aloalomarcelino</span>
+</footer>
+
+<script src="js/script.js"></script>
+<script>
+// Proteção de acesso
+const colaborador = localStorage.getItem('colaborador');
+if (!colaborador) {
+  alert('Sessão expirada. Faça login novamente.');
+  window.location.href = 'acesso.html';
+}
+
+// Data/Hora
+const atualizarDataHora = () => {
+  const agora = new Date();
+  const dia = String(agora.getDate()).padStart(2, '0');
+  const mes = String(agora.getMonth() + 1).padStart(2, '0');
+  const ano = agora.getFullYear();
+  const hora = String(agora.getHours()).padStart(2, '0');
+  const min = String(agora.getMinutes()).padStart(2, '0');
+  const dataHora = document.getElementById('dataHora');
+  if (dataHora) {
+    dataHora.textContent = `${dia}/${mes}/${ano} — ${hora}:${min}`;
+  }
+};
+atualizarDataHora();
+setInterval(atualizarDataHora, 60000);
+
+// Notícias do jornal
+const noticiasExemplo = [
+  {
+    id: 1,
+    data: '14/10/2025 10:30',
+    categoria: 'sistema',
+    titulo: 'Nova funcionalidade: Visualização de senha',
+    conteudo: 'Agora você pode visualizar a senha digitada no campo de login clicando no ícone do olho. Isso facilita a verificação antes de enviar o formulário.',
+    autor: 'Sistema virtoolin'
+  },
+  {
+    id: 2,
+    data: '14/10/2025 09:15',
+    categoria: 'cartorio',
+    titulo: 'Horário de funcionamento alterado',
+    conteudo: 'Informamos que durante esta semana o atendimento presencial será das 8h às 16h devido a manutenção predial.',
+    autor: 'Administração'
+  },
+  {
+    id: 3,
+    data: '13/10/2025 16:45',
+    categoria: 'importante',
+    titulo: 'Atualização de valores das certidões',
+    conteudo: 'A partir de 15/10/2025, os valores das certidões serão reajustados conforme tabela da ANOREG. Consulte a nova tabela no sistema.',
+    autor: 'Financeiro'
+  },
+  {
+    id: 4,
+    data: '13/10/2025 14:20',
+    categoria: 'aviso',
+    titulo: 'Manutenção programada no sistema',
+    conteudo: 'Será realizada manutenção no sistema no dia 20/10/2025 das 22h às 23h. Durante este período o sistema ficará indisponível.',
+    autor: 'TI'
+  },
+  {
+    id: 5,
+    data: '12/10/2025 11:00',
+    categoria: 'cartorio',
+    titulo: 'Novo protocolo de atendimento',
+    conteudo: 'Implementado novo fluxo de atendimento para agilizar o processamento de certidões. Todos os colaboradores devem seguir o novo protocolo.',
+    autor: 'Gerência'
+  }
+];
+
+function renderizarJornal(noticias) {
+  const timeline = document.getElementById('timelineJornal');
+  
+  if (noticias.length === 0) {
+    timeline.innerHTML = '<div class="jornal-vazio">Nenhuma atualização encontrada.</div>';
+    return;
+  }
+  
+  timeline.innerHTML = noticias.map(noticia => `
+    <div class="jornal-item categoria-${noticia.categoria}">
+      <div class="jornal-badge badge-${noticia.categoria}">${formatarCategoria(noticia.categoria)}</div>
+      <div class="jornal-conteudo">
+        <div class="jornal-header">
+          <h3>${noticia.titulo}</h3>
+          <span class="jornal-data">${noticia.data}</span>
+        </div>
+        <p class="jornal-texto">${noticia.conteudo}</p>
+        <div class="jornal-rodape">
+          <span class="jornal-autor">Por: ${noticia.autor}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function formatarCategoria(categoria) {
+  const categoriaMap = {
+    'sistema': 'Sistema',
+    'cartorio': 'Cartório',
+    'importante': 'Importante',
+    'aviso': 'Aviso'
+  };
+  return categoriaMap[categoria] || categoria;
+}
+
+// Renderizar notícias iniciais
+renderizarJornal(noticiasExemplo);
+
+// Filtros
+document.getElementById('filtroCategoria').addEventListener('change', filtrarJornal);
+document.getElementById('filtroPeriodo').addEventListener('change', filtrarJornal);
+
+function filtrarJornal() {
+  const categoria = document.getElementById('filtroCategoria').value;
+  const periodo = document.getElementById('filtroPeriodo').value;
+  
+  let noticiasFiltradas = noticiasExemplo.filter(noticia => {
+    const matchCategoria = !categoria || noticia.categoria === categoria;
+    return matchCategoria;
+  });
+  
+  renderizarJornal(noticiasFiltradas);
+}
+
+// Modal de sair
+document.querySelector('.sair').addEventListener('click', e => {
+  e.preventDefault();
+  if (confirm('Deseja realmente sair?')) {
+    localStorage.removeItem('colaborador');
+    window.location.href = 'acesso.html';
+  }
+});
+</script>
+
+</body>
+</html>

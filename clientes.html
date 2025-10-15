@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>virtoolin — Meus Clientes</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+<style>
+.pagina-conteudo {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.titulo-pagina {
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.titulo-pagina h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 8px;
+}
+
+.titulo-pagina p {
+  font-size: 13px;
+  color: #666;
+}
+
+.filtros-clientes {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filtros-clientes input,
+.filtros-clientes select,
+.filtros-clientes button {
+  padding: 10px 12px;
+  border: 1px solid #000;
+  border-radius: 6px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13px;
+  background: #fff;
+  font-weight: 600;
+}
+
+.filtros-clientes input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.filtros-clientes button {
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: none;
+}
+
+.filtros-clientes button:hover {
+  background: #000;
+  transform: translateY(-2px);
+}
+
+.lista-clientes {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.cliente-card {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 8px;
+  padding: 18px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: all 0.25s ease;
+}
+
+.cliente-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.cliente-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.cliente-info-principal {
+  flex: 1;
+}
+
+.cliente-nome {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 4px;
+}
+
+.cliente-id {
+  font-size: 11px;
+  color: #666;
+  font-weight: 600;
+}
+
+.cliente-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-vip {
+  background: #fff3e0;
+  color: #e65100;
+  border: 1px solid #ffb74d;
+}
+
+.badge-atos {
+  background: #e3f2fd;
+  color: #0d47a1;
+  border: 1px solid #64b5f6;
+}
+
+.cliente-corpo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.dado-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.dado-item:hover {
+  background: #f5f5f5;
+  border-color: #000;
+}
+
+.dado-conteudo {
+  flex: 1;
+  min-width: 0;
+}
+
+.dado-label {
+  font-size: 9px;
+  color: #888;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.dado-valor {
+  font-size: 12px;
+  color: #111;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.btn-copiar-mini {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.btn-copiar-mini:hover {
+  color: #111;
+  transform: scale(1.2);
+}
+
+.cliente-acoes {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+  flex-wrap: wrap;
+}
+
+.btn-acao {
+  padding: 7px 14px;
+  background: #fff;
+  color: #111;
+  border: 1px solid #000;
+  border-radius: 4px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-acao:hover {
+  background: #f5f5f5;
+  transform: translateY(-1px);
+}
+
+.btn-acao.destaque {
+  background: #111;
+  color: #fff;
+}
+
+.btn-acao.destaque:hover {
+  background: #000;
+}
+
+.clientes-vazio {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 14px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+/* Modal de Detalhes */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-conteudo {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 10px;
+  padding: 25px;
+  max-width: 700px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  animation: slideUp 0.3s ease;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #000;
+}
+
+.modal-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111;
+}
+
+.modal-header .cliente-id {
+  font-size: 11px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.btn-fechar {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  line-height: 1;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-fechar:hover {
+  color: #000;
+}
+
+.modal-secao {
+  margin-bottom: 20px;
+}
+
+.modal-secao:last-child {
+  margin-bottom: 0;
+}
+
+.modal-secao h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.historico-atos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ato-item-modal {
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.ato-item-info strong {
+  font-size: 12px;
+  color: #111;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.ato-item-info span {
+  font-size: 10px;
+  color: #666;
+}
+
+.ato-item-status {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-pendente {
+  background: #fff3e0;
+  color: #e65100;
+  border: 1px solid #ffb74d;
+}
+
+.status-andamento {
+  background: #e3f2fd;
+  color: #0d47a1;
+  border: 1px solid #64b5f6;
+}
+
+.status-concluido {
+  background: #e8f5e9;
+  color: #1b5e20;
+  border: 1px solid #81c784;
+}
+
+.notificacoes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.btn-notificar {
+  padding: 12px;
+  background: #fff;
+  color: #111;
+  border: 1px solid #000;
+  border-radius: 6px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-notificar:hover {
+  background: #f5f5f5;
+  transform: translateY(-2px);
+}
+
+.btn-notificar .icone {
+  font-size: 16px;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .filtros-clientes {
+    flex-direction: column;
+  }
+  
+  .filtros-clientes input {
+    min-width: 100%;
+  }
+  
+  .cliente-corpo {
+    grid-template-columns: 1fr;
+  }
+  
+  .cliente-acoes {
+    flex-direction: column;
+  }
+  
+  .btn-acao {
+    width: 100%;
+  }
+  
+  .notificacoes-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-conteudo">
+    <div class="topo-esquerda">
+      <div class="linha-info"><strong><em>© virtoolin atende o:</em></strong></div>
+      <div class="titulo-cartorio">2º RCPN</div>
+      <div class="data-hora" id="dataHora"></div>
+    </div>
+
+    <div class="topo-direita">
+      <a href="painel.html" class="link-topo">painel</a>
+      <a href="clientes.html" class="link-topo" style="text-decoration: underline;">meus clientes</a>
+      <a href="atos.html" class="link-topo">meus atos</a>
+      <a href="jornal.html" class="link-topo">jornal</a>
+      <a href="#" class="sair">SAIR</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="pagina-conteudo">
+    <div class="titulo-pagina">
+      <h1>Meus Clientes</h1>
+      <p>Gerenciar cadastros e histórico de atendimentos</p>
+    </div>
+
+    <div class="filtros-clientes">
+      <input type="text" id="buscarCliente" placeholder="Buscar por nome, CPF ou ID...">
+      <select id="filtroStatus">
+        <option value="">Todos</option>
+        <option value="vip">VIP</option>
+        <option value="ativos">Com atos recentes</option>
+      </select>
+      <button id="btnNovo">+ Novo</button>
+      <button id="btnImportar" style="background: #fff; color: #111; border: 1px solid #000;">📥 Importar</button>
+      <button id="btnExportar" style="background: #fff; color: #111; border: 1px solid #000;">💾 Exportar</button>
+    </div>
+
+    <div class="lista-clientes" id="listaClientes"></div>
+  </div>
+</main>
+
+<footer>
+  <span></span>
+  <span><span class="ovni">🛸</span> @aloalomarcelino</span>
+</footer>
+
+<input type="file" id="inputImportar" accept=".json">
+
+<script src="js/script.js"></script>
+<script>
+// ======== PROTEÇÃO DE ACESSO ========
+const colaborador = localStorage.getItem('colaborador');
+if (!colaborador) {
+  alert('Sessão expirada. Faça login novamente.');
+  window.location.href = 'acesso.html';
+}
+
+// ======== DATA/HORA ========
+const atualizarDataHora = () => {
+  const agora = new Date();
+  const dia = String(agora.getDate()).padStart(2, '0');
+  const mes = String(agora.getMonth() + 1).padStart(2, '0');
+  const ano = agora.getFullYear();
+  const hora = String(agora.getHours()).padStart(2, '0');
+  const min = String(agora.getMinutes()).padStart(2, '0');
+  const dataHora = document.getElementById('dataHora');
+  if (dataHora) {
+    dataHora.textContent = `${dia}/${mes}/${ano} — ${hora}:${min}`;
+  }
+};
+atualizarDataHora();
+setInterval(atualizarDataHora, 60000);
+
+// ======== BASE DE DADOS ========
+let clientesDB = [
+  {
+    id: 'CLI-001',
+    nome: 'João Silva Santos',
+    cpf: '123.456.789-00',
+    whatsapp: '+55 83 98765-4321',
+    telefone: '+55 83 3221-1234',
+    email: 'joao.silva@email.com',
+    endereco: 'Rua das Flores, 123, Apto 201',
+    bairro: 'Centro',
+    cidade: 'João Pessoa/PB',
+    cep: '58000-000',
+    dataCadastro: '10/08/2024',
+    vip: true,
+    atos: [
+      { id: 'ATO-4521', guiaId: 'GPA00123456', data: '12/10/2025', tipo: '2ª Via Certidão de Nascimento', livro: '2º RCPN', status: 'Concluído' },
+      { id: 'ATO-4498', guiaId: 'GPA00123401', data: '05/09/2025', tipo: '2ª Via Certidão de Casamento', livro: '2º RCPN', status: 'Concluído' },
+      { id: 'ATO-4465', guiaId: 'GPA00123350', data: '20/08/2025', tipo: 'Averbação de Divórcio', livro: 'Livro E', status: 'Concluído' }
+    ]
+  },
+  {
+    id: 'CLI-002',
+    nome: 'Maria Oliveira Costa',
+    cpf: '987.654.321-00',
+    whatsapp: '+55 83 91234-5678',
+    telefone: '',
+    email: 'maria.costa@email.com',
+    endereco: 'Av. Epitácio Pessoa, 456',
+    bairro: 'Bessa',
+    cidade: 'João Pessoa/PB',
+    cep: '58100-000',
+    dataCadastro: '15/09/2025',
+    vip: false,
+    atos: [
+      { id: 'ATO-4534', guiaId: 'GPA00123457', data: '14/10/2025', tipo: 'Certidão de Óbito', livro: '1º RCPN', status: 'Em Andamento' },
+      { id: 'ATO-4507', guiaId: 'GPA00123420', data: '28/09/2025', tipo: 'Traslado de Escritura', livro: 'Livro E', status: 'Concluído' }
+    ]
+  },
+  {
+    id: 'CLI-003',
+    nome: 'Pedro Henrique Alves',
+    cpf: '456.789.123-00',
+    whatsapp: '+55 83 99876-5432',
+    telefone: '+55 83 3222-5678',
+    email: 'pedro.alves@email.com',
+    endereco: 'Rua João Machado, 789, Casa 2',
+    bairro: 'Cabo Branco',
+    cidade: 'João Pessoa/PB',
+    cep: '58200-000',
+    dataCadastro: '02/10/2025',
+    vip: false,
+    atos: [
+      { id: 'ATO-4540', guiaId: 'GPA00123458', data: '13/10/2025', tipo: 'Habilitação de Casamento', livro: 'Casamento', status: 'Pendente' }
+    ]
+  },
+  {
+    id: 'CLI-004',
+    nome: 'Ana Paula Rodrigues',
+    cpf: '321.654.987-00',
+    whatsapp: '+55 83 98123-4567',
+    telefone: '',
+    email: 'ana.rodrigues@email.com',
+    endereco: 'Rua das Acácias, 321',
+    bairro: 'Manaíra',
+    cidade: 'João Pessoa/PB',
+    cep: '58300-000',
+    dataCadastro: '05/03/2025',
+    vip: false,
+    atos: [
+      { id: 'ATO-4529', guiaId: 'GPA00123440', data: '10/10/2025', tipo: 'Averbação de Alteração de Nome', livro: 'Livro E', status: 'Concluído' },
+      { id: 'ATO-4421', guiaId: 'GPA00122890', data: '15/05/2025', tipo: 'Certidão de Nascimento', livro: '1º RCPN', status: 'Concluído' }
+    ]
+  },
+  {
+    id: 'CLI-005',
+    nome: 'Carlos Eduardo Mendes',
+    cpf: '789.123.456-00',
+    whatsapp: '+55 83 99234-5678',
+    telefone: '+55 83 3223-9876',
+    email: 'carlos.mendes@email.com',
+    endereco: 'Av. Rui Carneiro, 555',
+    bairro: 'Miramar',
+    cidade: 'João Pessoa/PB',
+    cep: '58400-000',
+    dataCadastro: '20/01/2024',
+    vip: true,
+    atos: [
+      { id: 'ATO-4538', guiaId: 'GPA00123450', data: '11/10/2025', tipo: 'Interdição', livro: 'Livro E', status: 'Em Andamento' },
+      { id: 'ATO-4525', guiaId: 'GPA00123430', data: '05/10/2025', tipo: 'Certidão de Casamento', livro: '5º RCPN', status: 'Concluído' }
+    ]
+  }
+];
+
+// ======== RENDERIZAR LISTA ========
+function renderizarLista(filtro = '', status = '') {
+  const lista = document.getElementById('listaClientes');
+  let clientesFiltrados = clientesDB.filter(c => 
+    c.nome.toLowerCase().includes(filtro.toLowerCase()) ||
+    c.cpf.includes(filtro) ||
+    c.id.toLowerCase().includes(filtro.toLowerCase())
+  );
+  
+  if (status === 'vip') {
+    clientesFiltrados = clientesFiltrados.filter(c => c.vip);
+  } else if (status === 'ativos') {
+    clientesFiltrados = clientesFiltrados.filter(c => c.atos.length > 0);
+  }
+  
+  if (clientesFiltrados.length === 0) {
+    lista.innerHTML = '<div class="clientes-vazio">Nenhum cliente encontrado.</div>';
+    return;
+  }
+  
+  lista.innerHTML = clientesFiltrados.map(cliente => `
+    <div class="cliente-card">
+      <div class="cliente-header">
+        <div class="cliente-info-principal">
+          <div class="cliente-nome">${cliente.nome}</div>
+          <div class="cliente-id">ID: ${cliente.id}</div>
+        </div>
+        <div class="cliente-badges">
+          ${cliente.vip ? '<span class="badge badge-vip">VIP</span>' : ''}
+          <span class="badge badge-atos">${cliente.atos.length} ato${cliente.atos.length !== 1 ? 's' : ''}</span>
+        </div>
+      </div>
+      
+      <div class="cliente-corpo">
+        <div class="dado-item">
+          <div class="dado-conteudo">
+            <div class="dado-label">CPF:</div>
+            <div class="dado-valor">${cliente.cpf}</div>
+          </div>
+          <button class="btn-copiar-mini" onclick="copiarTexto('${cliente.cpf}', 'CPF')" title="Copiar CPF">📋</button>
+        </div>
+        
+        <div class="dado-item">
+          <div class="dado-conteudo">
+            <div class="dado-label">WhatsApp:</div>
+            <div class="dado-valor">${cliente.whatsapp}</div>
+          </div>
+          <button class="btn-copiar-mini" onclick="copiarTexto('${cliente.whatsapp}', 'WhatsApp')" title="Copiar WhatsApp">📋</button>
+        </div>
+        
+        <div class="dado-item">
+          <div class="dado-conteudo">
+            <div class="dado-label">E-mail:</div>
+            <div class="dado-valor">${cliente.email}</div>
+          </div>
+          <button class="btn-copiar-mini" onclick="copiarTexto('${cliente.email}', 'E-mail')" title="Copiar E-mail">📋</button>
+        </div>
+        
+        <div class="dado-item">
+          <div class="dado-conteudo">
+            <div class="dado-label">Endereço:</div>
+            <div class="dado-valor">${cliente.endereco}</div>
+          </div>
+          <button class="btn-copiar-mini" onclick="copiarEnderecoCompleto('${cliente.id}')" title="Copiar endereço completo">📋</button>
+        </div>
+      </div>
+      
+      <div class="cliente-acoes">
+        <button class="btn-acao destaque" onclick="verDetalhes('${cliente.id}')">Ver Detalhes</button>
+        <button class="btn-acao" onclick="notificarWhatsApp('${cliente.id}')">📱 WhatsApp</button>
+        <button class="btn-acao" onclick="notificarEmail('${cliente.id}')">✉️ E-mail</button>
+        <button class="btn-acao" onclick="editarCliente('${cliente.id}')">✏️ Editar</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ======== VER DETALHES ========
+function verDetalhes(clienteId) {
+  const cliente = clientesDB.find(c => c.id === clienteId);
+  if (!cliente) return;
+  
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+  modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+  
+  modal.innerHTML = `
+    <div class="modal-conteudo">
+      <div class="modal-header">
+        <div>
+          <h2>${cliente.nome}</h2>
+          <div class="cliente-id">ID: ${cliente.id} ${cliente.vip ? '• VIP' : ''}</div>
+        </div>
+        <button class="btn-fechar" onclick="this.closest('.modal-overlay').remove()">×</button>
+      </div>
+      
+      <div class="modal-secao">
+        <h3>📋 Dados Completos</h3>
+        <div style="display: grid; grid-template-columns: 1fr; gap: 8px;">
+          ${criarDadoCopiavel('Nome', cliente.nome)}
+          ${criarDadoCopiavel('CPF', cliente.cpf)}
+          ${criarDadoCopiavel('WhatsApp', cliente.whatsapp)}
+          ${cliente.telefone ? criarDadoCopiavel('Telefone', cliente.telefone) : ''}
+          ${criarDadoCopiavel('E-mail', cliente.email)}
+          ${criarDadoCopiavel('Endereço', cliente.endereco)}
+          ${criarDadoCopiavel('Bairro', cliente.bairro)}
+          ${criarDadoCopiavel('Cidade', cliente.cidade)}
+          ${criarDadoCopiavel('CEP', cliente.cep)}
+          ${criarDadoCopiavel('Endereço Completo', `${cliente.endereco}, ${cliente.bairro}, ${cliente.cidade}, CEP ${cliente.cep}`)}
+        </div>
+      </div>
+      
+      <div class="modal-secao">
+        <h3>📁 Histórico de Atos (${cliente.atos.length})</h3>
+        <div class="historico-atos">
+          ${cliente.atos.map(ato => `
+            <div class="ato-item-modal">
+              <div class="ato-item-info">
+                <strong>${ato.tipo}</strong>
+                <span>ID: ${ato.id} • Guia: ${ato.guiaId} • ${ato.livro} • ${ato.data}</span>
+              </div>
+              <span class="ato-item-status status-${ato.status.toLowerCase().replace(' ', '')}">${ato.status}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      
+      <div class="modal-secao">
+        <h3>📢 Notificar Cliente</h3>
+        <div class="notificacoes-grid">
+          <button class="btn-notificar" onclick="notificarWhatsApp('${cliente.id}'); this.closest('.modal-overlay').remove();">
+            <span class="icone">📱</span>
+            <span>WhatsApp</span>
+          </button>
+          <button class="btn-notificar" onclick="notificarEmail('${cliente.id}'); this.closest('.modal-overlay').remove();">
+            <span class="icone">✉️</span>
+            <span>E-mail</span>
+          </button>
+          <button class="btn-notificar" onclick="notificarSMS();">
+            <span class="icone">💬</span>
+            <span>SMS</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+}
+
+function criarDadoCopiavel(label, valor) {
+  const valorEscaped = valor.replace(/'/g, "\\'");
+  return `
+    <div class="dado-item">
+      <div class="dado-conteudo">
+        <div class="dado-label">${label}:</div>
+        <div class="dado-valor">${valor}</div>
+      </div>
+      <button class="btn-copiar-mini" onclick="copiarTexto('${valorEscaped}', '${label}')" title="Copiar ${label}">📋</button>
+    </div>
+  `;
+}
+
+// ======== COPIAR TEXTO ========
+function copiarTexto(texto, campo) {
+  navigator.clipboard.writeText(texto).then(() => {
+    mostrarAviso(`✔ ${campo} copiado!`);
+  }).catch(() => {
+    mostrarAviso(`❌ Erro ao copiar ${campo}`);
+  });
+}
+
+function copiarEnderecoCompleto(clienteId) {
+  const cliente = clientesDB.find(c => c.id === clienteId);
+  if (!cliente) return;
+  const enderecoCompleto = `${cliente.endereco}, ${cliente.bairro}, ${cliente.cidade}, CEP ${cliente.cep}`;
+  copiarTexto(enderecoCompleto, 'Endereço completo');
+}
+
+// ======== NOTIFICAÇÕES ========
+function notificarWhatsApp(clienteId) {
+  const cliente = clientesDB.find(c => c.id === clienteId);
+  if (!cliente) return;
+  
+  const nome = cliente.nome.split(' ')[0];
+  const msg = encodeURIComponent(`Olá ${nome}! Aqui é o 2º RCPN. Sua solicitação está pronta para retirada. Compareça ao cartório com documento de identidade.`);
+  const numero = cliente.whatsapp.replace(/\D/g, '');
+  window.open(`https://wa.me/${numero}?text=${msg}`, '_blank');
+  mostrarAviso(`📱 Abrindo WhatsApp de ${nome}`);
+}
+
+function notificarEmail(clienteId) {
+  const cliente = clientesDB.find(c => c.id === clienteId);
+  if (!cliente) return;
+  
+  const assunto = encodeURIComponent('Documento Pronto - 2º RCPN');
+  const corpo = encodeURIComponent(`Prezado(a) ${cliente.nome},\n\nInformamos que sua solicitação já está disponível para retirada no 2º RCPN.\n\nPor favor, compareça ao cartório munido de documento de identidade.\n\nAtenciosamente,\nEquipe 2º RCPN`);
+  window.location.href = `mailto:${cliente.email}?subject=${assunto}&body=${corpo}`;
+  mostrarAviso(`✉️ Abrindo e-mail para ${cliente.nome.split(' ')[0]}`);
+}
+
+function notificarSMS() {
+  mostrarAviso('💬 Funcionalidade SMS em desenvolvimento');
+}
+
+// ======== EDITAR CLIENTE ========
+function editarCliente(clienteId) {
+  const cliente = clientesDB.find(c => c.id === clienteId);
+  if (cliente) {
+    localStorage.setItem('editarCliente', JSON.stringify(cliente));
+    window.location.href = 'painel.html';
+  }
+}
+
+// ======== NOVO CLIENTE ========
+document.getElementById('btnNovo').addEventListener('click', () => {
+  window.location.href = 'painel.html';
+});
+
+// ======== IMPORTAR JSON ========
+document.getElementById('btnImportar').addEventListener('click', () => {
+  document.getElementById('inputImportar').click();
+});
+
+document.getElementById('inputImportar').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    try {
+      const dados = JSON.parse(event.target.result);
+      if (Array.isArray(dados)) {
+        clientesDB = dados;
+        renderizarLista();
+        mostrarAviso(`📥 ${dados.length} cliente(s) importado(s) com sucesso!`);
+      } else {
+        mostrarAviso('❌ Formato de arquivo inválido');
+      }
+    } catch (erro) {
+      mostrarAviso('❌ Erro ao importar arquivo JSON');
+      console.error(erro);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+// ======== EXPORTAR JSON ========
+document.getElementById('btnExportar').addEventListener('click', () => {
+  const dataStr = JSON.stringify(clientesDB, null, 2);
+  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(dataBlob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `clientes-virtoolin-${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  mostrarAviso(`💾 ${clientesDB.length} cliente(s) exportado(s) com sucesso!`);
+});
+
+// ======== BUSCA E FILTROS ========
+document.getElementById('buscarCliente').addEventListener('input', (e) => {
+  const status = document.getElementById('filtroStatus').value;
+  renderizarLista(e.target.value, status);
+});
+
+document.getElementById('filtroStatus').addEventListener('change', (e) => {
+  const busca = document.getElementById('buscarCliente').value;
+  renderizarLista(busca, e.target.value);
+});
+
+// ======== INICIALIZAR ========
+renderizarLista();
+
+// ======== MODAL DE SAIR ========
+document.querySelector('.sair').addEventListener('click', e => {
+  e.preventDefault();
+  if (confirm('Deseja realmente sair?')) {
+    localStorage.removeItem('colaborador');
+    window.location.href = 'acesso.html';
+  }
+});
+</script>
+
+</body>
+</html>

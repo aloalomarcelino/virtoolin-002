@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>virtoolin — Acesso</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Roboto Mono', monospace;
+  background: #f9f9f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container-acesso {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 8px;
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.logo-acesso {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.logo-acesso h1 {
+  font-size: 32px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 5px;
+  letter-spacing: 0.5px;
+}
+
+.logo-acesso p {
+  font-size: 12px;
+  color: #666;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #000;
+  border-radius: 6px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+  background: #fff;
+  color: #111;
+  text-align: center;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #888;
+  box-shadow: 0 0 6px rgba(0,0,0,0.15);
+}
+
+.senha-wrapper {
+  position: relative;
+}
+
+.senha-wrapper input {
+  padding-right: 45px;
+}
+
+.btn-ver-senha {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #666;
+  padding: 5px;
+  transition: color 0.2s;
+}
+
+.btn-ver-senha:hover {
+  color: #111;
+}
+
+.btn-entrar {
+  width: 100%;
+  padding: 12px;
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.25s ease;
+  letter-spacing: 0.5px;
+}
+
+.btn-entrar:hover {
+  background: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.btn-entrar:active {
+  transform: translateY(0);
+}
+
+.rodape-acesso {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 11px;
+  color: #999;
+  font-weight: 600;
+}
+
+.ovni {
+  display: inline-block;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.alerta {
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  text-align: center;
+  display: none;
+  font-weight: 600;
+}
+
+.alerta.erro {
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef5350;
+  display: block;
+}
+
+.alerta.sucesso {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #66bb6a;
+  display: block;
+}
+</style>
+</head>
+<body>
+
+<div class="container-acesso">
+  <div class="logo-acesso">
+    <h1>virtoolin</h1>
+    <p>Sistema de Atendimento</p>
+  </div>
+
+  <div id="alerta" class="alerta"></div>
+
+  <form id="formAcesso">
+    <div class="form-group">
+      <label for="cpf">CPF</label>
+      <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" required>
+    </div>
+
+    <div class="form-group">
+      <label for="senha">Senha</label>
+      <div class="senha-wrapper">
+        <input type="password" id="senha" placeholder="Digite sua senha" required>
+        <button type="button" class="btn-ver-senha" id="btnVerSenha">👁️</button>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-entrar">Entrar</button>
+  </form>
+
+  <div class="rodape-acesso">
+    <span class="ovni">🛸</span> @aloalomarcelino
+  </div>
+</div>
+
+<script>
+// Formatar CPF
+const cpfInput = document.getElementById('cpf');
+cpfInput.addEventListener('input', function(e) {
+  let value = e.target.value.replace(/\D/g, '');
+  if (value.length <= 11) {
+    value = value.replace(/(\d{3})(\d)/, '$1.$2');
+    value = value.replace(/(\d{3})(\d)/, '$1.$2');
+    value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+  }
+  e.target.value = value;
+});
+
+// Ver/Ocultar senha
+const senhaInput = document.getElementById('senha');
+const btnVerSenha = document.getElementById('btnVerSenha');
+
+btnVerSenha.addEventListener('click', function() {
+  if (senhaInput.type === 'password') {
+    senhaInput.type = 'text';
+    btnVerSenha.textContent = '🙈';
+  } else {
+    senhaInput.type = 'password';
+    btnVerSenha.textContent = '👁️';
+  }
+});
+
+// Login
+const formAcesso = document.getElementById('formAcesso');
+const alerta = document.getElementById('alerta');
+
+formAcesso.addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const cpf = cpfInput.value.replace(/\D/g, '');
+  const senha = senhaInput.value;
+  
+  // Validação: MARCEL - CPF 07481505446 - Senha 1003
+  if (cpf === '07481505446' && senha === '1003') {
+    localStorage.setItem('colaborador', 'MARCEL');
+    alerta.className = 'alerta sucesso';
+    alerta.textContent = '✔ Login realizado! Redirecionando...';
+    setTimeout(() => {
+      window.location.href = 'painel.html';
+    }, 1000);
+  } else {
+    alerta.className = 'alerta erro';
+    alerta.textContent = '❌ CPF ou senha inválidos!';
+    setTimeout(() => {
+      alerta.className = 'alerta';
+    }, 3000);
+  }
+});
+
+// Enter para submeter
+senhaInput.addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    formAcesso.dispatchEvent(new Event('submit'));
+  }
+});
+</script>
+
+</body>
+</html>

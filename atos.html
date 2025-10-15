@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>virtoolin — Meus Atos</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+<style>
+.pagina-conteudo {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.titulo-pagina {
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.titulo-pagina h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 8px;
+}
+
+.titulo-pagina p {
+  font-size: 13px;
+  color: #666;
+}
+
+.filtros-atos {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filtros-atos input,
+.filtros-atos select {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 12px;
+  border: 1px solid #000;
+  border-radius: 6px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13px;
+  background: #fff;
+}
+
+.lista-atos {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ato-card {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 8px;
+  padding: 18px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: all 0.25s ease;
+}
+
+.ato-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.ato-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.ato-protocolo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+}
+
+.ato-status {
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-pendente {
+  background: #fff3e0;
+  color: #e65100;
+  border: 1px solid #ffb74d;
+}
+
+.badge-andamento {
+  background: #e3f2fd;
+  color: #0d47a1;
+  border: 1px solid #64b5f6;
+}
+
+.badge-concluido {
+  background: #e8f5e9;
+  color: #1b5e20;
+  border: 1px solid #81c784;
+}
+
+.badge-cancelado {
+  background: #ffebee;
+  color: #b71c1c;
+  border: 1px solid #e57373;
+}
+
+.ato-corpo {
+  margin-bottom: 12px;
+}
+
+.ato-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.ato-info strong {
+  font-size: 15px;
+  color: #111;
+}
+
+.ato-cpf {
+  font-size: 12px;
+  color: #666;
+}
+
+.ato-detalhes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.ato-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ato-item .label {
+  font-size: 10px;
+  color: #888;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.ato-item span:last-child {
+  font-size: 13px;
+  color: #111;
+  font-weight: 600;
+}
+
+.ato-valor {
+  color: #2e7d32 !important;
+}
+
+.ato-acoes {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.btn-ato {
+  padding: 8px 16px;
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-transform: uppercase;
+}
+
+.btn-ato:hover {
+  background: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.ato-vazio {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 14px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .filtros-atos {
+    flex-direction: column;
+  }
+  
+  .filtros-atos input,
+  .filtros-atos select {
+    min-width: 100%;
+  }
+  
+  .ato-detalhes {
+    grid-template-columns: 1fr;
+  }
+  
+  .ato-acoes {
+    flex-direction: column;
+  }
+  
+  .btn-ato {
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-conteudo">
+    <div class="topo-esquerda">
+      <div class="linha-info"><strong><em>© virtoolin atende o:</em></strong></div>
+      <div class="titulo-cartorio">2º RCPN</div>
+      <div class="data-hora" id="dataHora"></div>
+    </div>
+
+    <div class="topo-direita">
+      <a href="painel.html" class="link-topo">painel</a>
+      <a href="clientes.html" class="link-topo">meus clientes</a>
+      <a href="atos.html" class="link-topo" style="text-decoration: underline;">meus atos</a>
+      <a href="jornal.html" class="link-topo">jornal</a>
+      <a href="#" class="sair">SAIR</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="pagina-conteudo">
+    <div class="titulo-pagina">
+      <h1>Meus Atos</h1>
+      <p>Histórico de atendimentos realizados</p>
+    </div>
+
+    <div class="filtros-atos">
+      <input type="text" id="buscarAto" placeholder="Buscar por protocolo, nome ou CPF...">
+      <select id="filtroTipo">
+        <option value="">Todos os tipos</option>
+        <option value="1rcpn">1º RCPN</option>
+        <option value="2rcpn">2º RCPN</option>
+        <option value="5rcpn">5º RCPN</option>
+        <option value="casamento">Casamento</option>
+        <option value="crc">CRC</option>
+        <option value="livroe">Livro E</option>
+        <option value="busca">Busca</option>
+      </select>
+      <select id="filtroStatus">
+        <option value="">Todos os status</option>
+        <option value="pendente">Pendente</option>
+        <option value="andamento">Em Andamento</option>
+        <option value="concluido">Concluído</option>
+        <option value="cancelado">Cancelado</option>
+      </select>
+    </div>
+
+    <div class="lista-atos" id="listaAtos"></div>
+  </div>
+</main>
+
+<footer>
+  <span></span>
+  <span><span class="ovni">🛸</span> @aloalomarcelino</span>
+</footer>
+
+<script src="js/script.js"></script>
+<script>
+// Proteção de acesso
+const colaborador = localStorage.getItem('colaborador');
+if (!colaborador) {
+  alert('Sessão expirada. Faça login novamente.');
+  window.location.href = 'acesso.html';
+}
+
+// Data/Hora
+const atualizarDataHora = () => {
+  const agora = new Date();
+  const dia = String(agora.getDate()).padStart(2, '0');
+  const mes = String(agora.getMonth() + 1).padStart(2, '0');
+  const ano = agora.getFullYear();
+  const hora = String(agora.getHours()).padStart(2, '0');
+  const min = String(agora.getMinutes()).padStart(2, '0');
+  const dataHora = document.getElementById('dataHora');
+  if (dataHora) {
+    dataHora.textContent = `${dia}/${mes}/${ano} — ${hora}:${min}`;
+  }
+};
+atualizarDataHora();
+setInterval(atualizarDataHora, 60000);
+
+// Atos de exemplo
+const atosExemplo = [
+  {
+    protocolo: 'GPA00123456',
+    data: '14/10/2025',
+    cliente: 'João Silva Santos',
+    cpf: '123.456.789-00',
+    tipo: '2º RCPN',
+    servico: 'Certidão de Nascimento - 2ª Via',
+    status: 'concluido',
+    valor: 'R$ 45,00'
+  },
+  {
+    protocolo: 'GPA00123457',
+    data: '14/10/2025',
+    cliente: 'Maria Oliveira Costa',
+    cpf: '987.654.321-00',
+    tipo: '1º RCPN',
+    servico: 'Certidão de Óbito',
+    status: 'andamento',
+    valor: 'R$ 38,00'
+  },
+  {
+    protocolo: 'GPA00123458',
+    data: '13/10/2025',
+    cliente: 'Pedro Henrique Alves',
+    cpf: '456.789.123-00',
+    tipo: 'Casamento',
+    servico: 'Habilitação de Casamento',
+    status: 'pendente',
+    valor: 'R$ 125,00'
+  }
+];
+
+function renderizarAtos(atos) {
+  const listaAtos = document.getElementById('listaAtos');
+  
+  if (atos.length === 0) {
+    listaAtos.innerHTML = '<div class="ato-vazio">Nenhum ato encontrado.</div>';
+    return;
+  }
+  
+  listaAtos.innerHTML = atos.map(ato => `
+    <div class="ato-card status-${ato.status}">
+      <div class="ato-header">
+        <div class="ato-protocolo">${ato.protocolo}</div>
+        <div class="ato-status badge-${ato.status}">${formatarStatus(ato.status)}</div>
+      </div>
+      <div class="ato-corpo">
+        <div class="ato-info">
+          <strong>${ato.cliente}</strong>
+          <span class="ato-cpf">${ato.cpf}</span>
+        </div>
+        <div class="ato-detalhes">
+          <div class="ato-item">
+            <span class="label">Tipo:</span>
+            <span>${ato.tipo}</span>
+          </div>
+          <div class="ato-item">
+            <span class="label">Serviço:</span>
+            <span>${ato.servico}</span>
+          </div>
+          <div class="ato-item">
+            <span class="label">Data:</span>
+            <span>${ato.data}</span>
+          </div>
+          <div class="ato-item">
+            <span class="label">Valor:</span>
+            <span class="ato-valor">${ato.valor}</span>
+          </div>
+        </div>
+      </div>
+      <div class="ato-acoes">
+        <button class="btn-ato" onclick="verDetalhes('${ato.protocolo}')">Ver Detalhes</button>
+        <button class="btn-ato" onclick="imprimirAto('${ato.protocolo}')">Imprimir</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function formatarStatus(status) {
+  const statusMap = {
+    'pendente': 'Pendente',
+    'andamento': 'Em Andamento',
+    'concluido': 'Concluído',
+    'cancelado': 'Cancelado'
+  };
+  return statusMap[status] || status;
+}
+
+function verDetalhes(protocolo) {
+  mostrarAviso(`📋 Ver detalhes do protocolo: ${protocolo}`);
+}
+
+function imprimirAto(protocolo) {
+  mostrarAviso(`🖨️ Imprimir ato: ${protocolo}`);
+}
+
+// Renderizar atos iniciais
+renderizarAtos(atosExemplo);
+
+// Filtros
+document.getElementById('buscarAto').addEventListener('input', filtrarAtos);
+document.getElementById('filtroTipo').addEventListener('change', filtrarAtos);
+document.getElementById('filtroStatus').addEventListener('change', filtrarAtos);
+
+function filtrarAtos() {
+  const busca = document.getElementById('buscarAto').value.toLowerCase();
+  const tipo = document.getElementById('filtroTipo').value;
+  const status = document.getElementById('filtroStatus').value;
+  
+  const atosFiltrados = atosExemplo.filter(ato => {
+    const matchBusca = !busca || 
+      ato.protocolo.toLowerCase().includes(busca) ||
+      ato.cliente.toLowerCase().includes(busca) ||
+      ato.cpf.includes(busca);
+    
+    const matchTipo = !tipo || ato.tipo.toLowerCase().includes(tipo);
+    const matchStatus = !status || ato.status === status;
+    
+    return matchBusca && matchTipo && matchStatus;
+  });
+  
+  renderizarAtos(atosFiltrados);
+}
+
+// Modal de sair
+document.querySelector('.sair').addEventListener('click', e => {
+  e.preventDefault();
+  if (confirm('Deseja realmente sair?')) {
+    localStorage.removeItem('colaborador');
+    window.location.href = 'acesso.html';
+  }
+});
+</script>
+
+</body>
+</html>
